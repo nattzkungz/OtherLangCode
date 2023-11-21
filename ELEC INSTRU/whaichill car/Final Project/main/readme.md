@@ -39,7 +39,7 @@ Square: Brake
 
 ### Created by @whaichill
 
-### Known Issues:
+## Known Issues:
 1. Automated Emergency Braking System (AEB) requires constant user input to work
 2. AEB does not work when using DS4 Controller
 3. Weak Wifi signal, video stream would usually cut off and delay  
