@@ -37,7 +37,19 @@ Square: Brake
 
 ##### NOTE: Both R2 and L2 have a deadzone from unpressed to around the middle, so press more to accelerate forward or backward
 
-### Created by @whaichill
+## Useful Information
+Command to start streaming camera manually:  
+
+```libcamera-vid -t0 --width 1920 --height 1080 --framerate 30 --nopreview --codec h264 --profile high --intra 5 --listen -o tcp://0.0.0.0:8494```
+
+NOTE: The video feed is streaming in h264 format, requiring the use of VLC to open the stream  
+
+To access video feed:  
+
+1. Open VLC
+2. Find open network content and type in: tcp/h264://<raspberry pi address>:8494
+3. Enjoy
+
 
 ## Known Issues:
 1. Automated Emergency Braking System (AEB) requires constant user input to work
@@ -47,5 +59,87 @@ This have been identified as Raspberry Pi fault since the wifi antenna equipped 
 Therefore, wifi usb stick with external antenna would have help this problem
 4. After a period of extensive usage of the device, some function would not work due to heat (ex. Locked servo, Wifi is disconnected randomly, etc.)
 5. Video Stream is hard to access and require manual stream restart as the receiver device is disconnected
+
+## Simplified Program Flowchart
+
+```+----------------------+
+|   Setup and          |
+|   Initialization     |
+|                      |
+| - Import Libraries   |
+| - Setup GPIO Pins    |
+| - Setup PWM          |
+| - Initialize Sound   |
+|   Components         |
++----------------------+
+           |
+           v
++----------------------+
+|    Keyboard Input    |
+|        Handling       |
+|                      |
+| - Check Keys         |
+|   (w, s, a, d, etc)  |
+| - Handle Movement    |
+|   Keys (w, s, a, d)  |
+| - Handle Sound Keys  |
+|   (h, j, k, l, etc)  |
+| - Handle Special Keys|
+|   (p, m, q, etc)      |
++----------------------+
+           |
+           v
++----------------------+
+| Ultrasonic Sensor     |
+| Functions            |
+|                      |
+| - Distance Back      |
+|   Calculation        |
+| - Distance Front     |
+|   Calculation        |
++----------------------+
+           |
+           v
++----------------------+
+|  Movement Functions  |
+|   (Front and Back,    |
+|    Brake, Middle,     |
+|    Drag Race)         |
+|                      |
+| - Front and Back      |
+|   Movement Function  |
+| - Brake Movement      |
+|   Function            |
+| - Middle Movement     |
+|   Function            |
+| - Drag Race Function  |
+| - ds4controller       |
+| - driverMotorConverter|
+| - servoConverter      |
++----------------------+
+           |
+           v
++----------------------+
+|   Receiving Input    |
+|   from User Functions |
+|  (Keyboard and        |
+|   Joystick)           |
+|                      |
+| - horn                |
+| - bmwSound            |
+| - farting             |
+| - wallsSound          |
+| - emerBrakeSound      |
+| - joystickSafetyCheck |
++----------------------+
+```
+
+### Created by @whaichill_group
+
+Member:  
+Thanakrit Trongmahavisate   
+Sarun Khieonavavongsa  
+Jirath Yongvivathanakul  
+Pawarisa Tanpoonkiat  
 
 
