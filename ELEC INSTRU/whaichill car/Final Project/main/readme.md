@@ -39,4 +39,13 @@ Square: Brake
 
 ### Created by @whaichill
 
+### Known Issues:
+1. Automated Emergency Braking System (AEB) requires constant user input to work
+2. AEB does not work when using DS4 Controller
+3. Weak Wifi signal, video stream would usually cut off and delay  
+This have been identified as Raspberry Pi fault since the wifi antenna equipped on the device is low power unit  
+Therefore, wifi usb stick with external antenna would have help this problem
+4. After a period of extensive usage of the device, some function would not work due to heat (ex. Locked servo, Wifi is disconnected randomly, etc.)
+5. Video Stream is hard to access and require manual stream restart as the receiver device is disconnected
+
 
