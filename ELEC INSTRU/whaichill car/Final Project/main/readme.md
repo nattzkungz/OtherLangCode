@@ -19,21 +19,21 @@
 #### NOTE: Automatic Emergency Braking System only works on Keyboard input, DS4 Input does not support this feature
 
 ### For keyboard:
-w: forward (speed +10 max 100)
-s: backward (speed = 25)
-a: left (servo duty -0.25 until 5.0)
-d: right (servo duty +0.25 until 8)\
-spacebar: brake
-m: middle (servo duty = 6.5)
-h,j,k,l: playsound
+w: forward (speed +10 max 100)__
+s: backward (speed = 25)__
+a: left (servo duty -0.25 until 5.0)__
+d: right (servo duty +0.25 until 8)__
+spacebar: brake__
+m: middle (servo duty = 6.5)__
+h,j,k,l: playsound__
 
 ### For DS4:
 
-L3 Stick to turn (Real time steering)
-X,Triangle,O, down arrow: playsound
-R2: variable accelerator (Forward)
-L2: variable reverser (Backward)
-Square: Brake
+L3 Stick to turn (Real time steering)__
+X,Triangle,O, down arrow: playsound__
+R2: variable accelerator (Forward)__
+L2: variable reverser (Backward)__
+Square: Brake__
 
 ##### NOTE: Both R2 and L2 have a deadzone from unpressed to around the middle, so press more to accelerate forward or backward
 
