@@ -39,7 +39,7 @@ NOTE: The video feed is streaming in h264 format, requiring the use of VLC to op
 To access video feed:  
 
 1. Open VLC
-2. Find open network content and type in: tcp/h264://<raspberry pi address>:8494
+2. Find open network content and type in: ```tcp/h264://<raspberry pi address>:8494```
 3. Enjoy
 
 
