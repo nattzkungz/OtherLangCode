@@ -1,0 +1,285 @@
++----------------------+
+|   Setup and          |
+|   Initialization     |
++----------------------+
+           |
+           v
++----------------------+
+| Import Libraries     |
+| Setup GPIO Pins      |
+| Setup PWM            |
+| Initialize Sound      |
+| Components            |
+|                      |
+| - Import necessary   |
+|   libraries          |
+| - Set up GPIO pins   |
+|   for motors, servo,  |
+|   and sensors        |
+| - Initialize PWM for |
+|   controlling speed  |
+|   and position       |
+| - Set up sound        |
+|   components and      |
+|   paths for sound     |
+|   files              |
++----------------------+
+
+
+
+=============
+
+
++----------------------+
+|    Keyboard Input    |
+|        Handling       |
++----------------------+
+           |
+           v
++----------------------+
+|      Check Keys      |
+|     (w, s, a, d, etc) |
+|                      |
+|  - Get pressed key    |
+|    using getkey()     |
+|  - If key == "w",     |
+|    gradually increase|
+|    speed for forward  |
+|    movement           |
+|    (acceleration)     |
+|  - If key == "s", set  |
+|    speed for backward |
+|    movement           |
+|  - If key == "a", turn |
+|    left within        |
+|    turning limits     |
+|  - If key == "d", turn |
+|    right within       |
+|    turning limits     |
+|  - Display current    |
+|    key, speed, and     |
+|    direction          |
++----------------------+
+           |
+           v
++----------------------+
+| Handle Movement Keys |
+|   (w, s, a, d)        |
+|                      |
+|  - If key is "w",     |
+|    check if previous |
+|    key was also "w"   |
+|    to increase speed  |
+|    gradually          |
+|    (acceleration)     |
+|  - If key is "s", set |
+|    speed for backward |
+|    movement           |
+|  - If key is "a", turn |
+|    left if within     |
+|    turning limits     |
+|  - If key is "d", turn |
+|    right if within    |
+|    turning limits     |
+|  - Display current    |
+|    key, speed, and     |
+|    direction          |
+|  - Display warnings   |
+|    for speed limits   |
++----------------------+
+           |
+           v
++----------------------+
+|   Handle Sound Keys  |
+|   (h, j, k, l, etc)   |
+|                      |
+|  - If key is "h",     |
+|    play horn sound    |
+|    and display        |
+|    activation message |
+|  - If key is "j",     |
+|    play fart sound    |
+|    and display        |
+|    activation message |
+|  - If key is "k",     |
+|    play walls sound   |
+|    and display        |
+|    activation message |
+|  - If key is "l",     |
+|    play BMW sound     |
+|    and display        |
+|    activation message |
++----------------------+
+           |
+           v
++----------------------+
+|   Handle Special Keys|
+|   (p, m, q, etc)      |
+|                      |
+|  - If key is "p",     |
+|    initiate drag race |
+|    mode and display   |
+|    activation message |
+|  - If key is "m", set  |
+|    servo to middle     |
+|    position and       |
+|    display message    |
+|  - If key is "q", exit |
+|    the program and    |
+|    display exit message|
++----------------------+
+
+
+
+===========
+
+
++----------------------+
+| Ultrasonic Sensor     |
+| Functions            |
++----------------------+
+           |
+           v
++----------------------+
+|  Distance Back        |
+|   Calculation         |
+|                      |
+|  - Set trigger to HIGH|
+|  - Set trigger to LOW |
+|    after 0.01ms       |
+|  - Measure time of    |
+|    flight for back    |
+|    ultrasonic wave    |
+|  - Calculate distance |
+|    based on time      |
+|    of flight          |
++----------------------+
+           |
+           v
++----------------------+
+|  Distance Front       |
+|   Calculation         |
+|                      |
+|  - Set trigger to HIGH|
+|  - Set trigger to LOW |
+|    after 0.01ms       |
+|  - Measure time of    |
+|    flight for front   |
+|    ultrasonic wave    |
+|  - Calculate distance |
+|    based on time      |
+|    of flight          |
++----------------------+
+
+
+
+============
+
+
++----------------------+
+|  Movement Functions  |
+|   (Front and Back,    |
+|    Brake, Middle,     |
+|    Drag Race)         |
++----------------------+
+           |
+           v
++----------------------+
+|   Front and Back      |
+|   Movement Function   |
+|                      |
+|  - Set direction and  |
+|    speed for motors   |
+|  - Adjust PWM for     |
+|    desired speed      |
+|  - Implement safety   |
+|    checks for speed   |
+|  - Display warnings   |
+|    for excessive      |
+|    speed              |
+|  - Execute PWM and    |
+|    direction changes  |
++----------------------+
+           |
+           v
++----------------------+
+| Brake Movement        |
+|   Function            |
+|                      |
+|  - Stop motors and set|
+|    PWM to zero        |
+|  - Display brake      |
+|    message            |
++----------------------+
+           |
+           v
++----------------------+
+|   Middle Movement     |
+|   Function            |
+|                      |
+|  - Set servo to middle|
+|    position           |
+|  - Display message    |
+|    for centering      |
++----------------------+
+           |
+           v
++----------------------+
+|  Drag Race Function   |
+|                      |
+|  - Implement sequence|
+|    for drag race mode  |
+|  - Adjust PWM for     |
+|    acceleration       |
+|  - Display countdown  |
+|    and racing message |
+|  - Execute PWM and    |
+|    direction changes  |
++----------------------+
+           |
+           v
++----------------------+
+|  ds4controller        |
+|                      |
+|  - Create Controller  |
+|    class extending    |
+|    from pyPS4Controller|
+|  - Define callback    |
+|    functions for      |
+|    various joystick   |
+|    events              |
+|  - Listen for joystick |
+|    events and execute  |
+|    corresponding      |
+|    functions          |
+|  - Display joystick   |
+|    input and feedback  |
+|  - Display messages   |
+|    for specific       |
+|    button activations |
++----------------------+
+           |
+           v
++----------------------+
+|  driverMotorConverter |
+|                      |
+|  - Convert joystick   |
+|    input to motor     |
+|    speed              |
++----------------------+
+           |
+           v
++----------------------+
+|  servoConverter       |
+|                      |
+|  - Convert joystick   |
+|    input to servo     |
+|    position           |
++----------------------+
+
+
+
+============
+
+
+
