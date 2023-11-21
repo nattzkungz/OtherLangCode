@@ -50,6 +50,7 @@ hornSound = pygame.mixer.Sound("/home/pi/Desktop/main/sound/horn.wav")
 fart = pygame.mixer.Sound("/home/pi/Desktop/main/sound/fart.wav")
 walls = pygame.mixer.Sound("/home/pi/Desktop/main/sound/walls.wav")
 mb_aeb = pygame.mixer.Sound("/home/pi/Desktop/main/sound/mb_aeb.wav")
+chineseBT = pygame.mixer.Sound("/home/pi/Desktop/main/sound/chineseBT.wav")
 
 # UltraSonic Sensor
 def distance_back():
@@ -158,6 +159,8 @@ def keyboard():
     duty = 6.5
     speed = 0
     pastKey = ""
+
+
     while True:
         key = getkey()
         distFRONT = round(distance_front(),1)
@@ -165,7 +168,7 @@ def keyboard():
         print(f"Front Space: {distFRONT}")
         print(f"Back Space: {distBACK}")
         count = 0
-        if distFRONT <= 10:
+        if distFRONT <= 7:
             count = 1
             if count == 1:
                 brake()
@@ -177,7 +180,7 @@ def keyboard():
             else:
                 count = 0
 
-        if distBACK <= 10:
+        if distBACK <= 5:
             count = 1
             if count == 1:
                 brake()
@@ -322,11 +325,19 @@ def ds4controller():
 
 modeSelect = ""
 # Main loop for the program
+
+
 while modeSelect != "kb" and modeSelect != "ds4":
     modeSelect = input("Keyboard or Joystick? (kb/ds4): ")
     if modeSelect == "kb":
+        chineseBT.play()
+        time.sleep(5)
+        bmwSound()
         keyboard()
     elif modeSelect == "ds4":
+        chineseBT.play()
+        time.sleep(5)
+        bmwSound()
         ds4controller()
     else:
         print("Please select a mode")
