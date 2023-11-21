@@ -5,15 +5,7 @@
 
 1. Open command line and navigate the command window to this folder
 2. Input ```chmod +x <setup.sh path>```
-3. Input ```chmod +x <startupSequence.sh>```
 3. Run setup.sh
-
-### Start Up step:
-1. Navigate the command window to this folder
-2. Run "startupSequence.sh"
-3. Access the camera feed via VLC, use the address: ```tcp/h264://<raspberry pi address>:8494``` to connect to the network feed
-##### NOTE: Both raspberry pi and computer must be on the same network circle
-
 
 ## Manual
 #### NOTE: Automatic Emergency Braking System only works on Keyboard input, DS4 Input does not support this feature
@@ -37,7 +29,7 @@ Square: Brake
 
 ##### NOTE: Both R2 and L2 have a deadzone from unpressed to around the middle, so press more to accelerate forward or backward
 
-## Useful Information
+## Starting Video Stream
 Command to start streaming camera manually:  
 
 ```libcamera-vid -t0 --width 1920 --height 1080 --framerate 30 --nopreview --codec h264 --profile high --intra 5 --listen -o tcp://0.0.0.0:8494```
