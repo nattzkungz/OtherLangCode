@@ -48,8 +48,8 @@ mcp2515_can CAN(SPI_CS_PIN); // Set CS pin
 float p_des = 0.0;     // AK70-10
 float v_des = 0.0;
 float t_ff = 0.0;
-float kp = 3; // Spring
-float kd = 0; // Damping
+float kp = 2; // Spring
+float kd = 0.05; // Damping
 
 float p = 0.0;
 

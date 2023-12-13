@@ -1,0 +1,28 @@
+sys =
+  From input "u1" to output "y1":
+          43.82
+  ---------------------
+  s^2 + 2.763 s + 50.31
+ 
+Continuous-time identified transfer function.
+
+Parameterization:
+   Number of poles: 2   Number of zeros: 0
+   Number of free coefficients: 3
+   Use "tfdata", "getpvec", "getcov" for parameters and their uncertainties.
+
+Status:                                          
+Estimated using TFEST on time domain data "data".
+Fit to estimation data: 99.7%                    
+FPE: 2.401e-05, MSE: 2.183e-06                   
+ 
+Model Properties
+
+J =
+
+    0.0199
+
+
+C =
+
+    0.0549
