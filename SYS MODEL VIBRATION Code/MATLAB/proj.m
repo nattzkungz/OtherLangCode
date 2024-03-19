@@ -3,7 +3,7 @@ filename =  '/Users/thanakrittr/Downloads/vibrPrj.xlsx';
 K = 1;
 T = 0.1;
 
-Data = xlsread(filename,'XL 2','Y25:AA30');
+Data = xlsread(filename,1,'A18:C33');
 t = Data(:,1);
 
 Step = Data(1,3);
@@ -18,9 +18,6 @@ for i=1:length(Ref)
     Pos(i) = Step - Data(i,3);
 end
 plot(t,Pos)
-title('Experiment (kd = 0.05, kp = 1)')
-ylabel('Amplitude')
-xlabel('Time (s) [Starts from Y25]')
 
 data = iddata(Pos',Ref',T);
 
