@@ -1,0 +1,30 @@
+{
+    "firstName": "Max",
+    "lastName": "Hi",
+    "age": 26,
+    "history": [
+        {"disease": "cold", "treatment": "sleep"},
+        {"disease": "fever", "treatment": "eat drugs"}
+    ]
+}
+[
+{
+    "firstName": "A",
+    "lastName": "B",
+    "age": 22,
+    "history": [
+        {"disease": "cold", "treatment": "sleep"},
+        {"disease": "fever", "treatment": "do drugs"}
+    ]
+}
+,
+{
+    "firstName": "C",
+    "lastName": "D",
+    "age": 32,
+    "history": [
+        {"disease": "cold", "treatment": "wake"},
+        {"disease": "fever", "treatment": "do drugs"}
+    ]
+}
+]
