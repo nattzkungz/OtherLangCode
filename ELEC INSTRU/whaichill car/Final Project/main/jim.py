@@ -130,7 +130,7 @@ def keyboard():
 
 
     while True:
-        key = getkey()
+        key = input("Input the key, w - forward | s - break\n a - turn left, d - turn right: ")
         distFRONT = round(distance_front(),1)
         distBACK = round(distance_back(),1)
         print(f"Front Space: {distFRONT}")
