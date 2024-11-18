@@ -1,121 +1,290 @@
 # Importing Libraries
 import RPi.GPIO as GPIO
 import time
-import os
 
 # Setting GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
 
-# GPIO Pin Configuration
+# Setting up GPIO pins
 # Servo
 SERVO_PIN = 17
 GPIO.setup(SERVO_PIN, GPIO.OUT)
 
 # Motor
-MOTOR_PWM_PIN = 12
-GPIO.setup(MOTOR_PWM_PIN, GPIO.OUT)
+AN2 = 13
+AN1 = 12
+DIG2 = 24
+DIG1 = 26
+GPIO.setup(AN2, GPIO.OUT)
+GPIO.setup(AN1, GPIO.OUT)
+GPIO.setup(DIG2, GPIO.OUT)
+GPIO.setup(DIG1, GPIO.OUT)
 
-# Ultrasonic Sensors
-# Front
-FRONT_TRIGGER = 20
-FRONT_ECHO = 21
-GPIO.setup(FRONT_TRIGGER, GPIO.OUT)
-GPIO.setup(FRONT_ECHO, GPIO.IN)
+# Ultrasonic Sensor
+# BACK
+TRIGGER = 18
+ECHO = 23
+GPIO.setup(TRIGGER, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
 
-# Back
-BACK_TRIGGER = 18
-BACK_ECHO = 23
-GPIO.setup(BACK_TRIGGER, GPIO.OUT)
-GPIO.setup(BACK_ECHO, GPIO.IN)
+# FRONT
+TRIGGER_2 = 20
+ECHO_2 = 21
+GPIO.setup(TRIGGER_2, GPIO.OUT)
+GPIO.setup(ECHO_2, GPIO.IN)
 
 # Setting up PWM
-servo = GPIO.PWM(SERVO_PIN, 50)  # 50 Hz for servo
-motor_pwm = GPIO.PWM(MOTOR_PWM_PIN, 100)  # 100 Hz for motor
+servo = GPIO.PWM(SERVO_PIN, 50)
+p1 = GPIO.PWM(AN1, 100)
+p2 = GPIO.PWM(AN2, 100)
+servo.start(0)
 
-# Initializing PWM
-servo.start(7.5)  # Neutral position (90 degrees)
-motor_pwm.start(0)  # Motor off
-
-# Variables to track current state
-servo_angle = 90  # Initial angle
-motor_speed = 0   # Initial speed (0%)
-front_distance = 100  # Placeholder distance from the front sensor
-back_distance = 100   # Placeholder distance from the back sensor
-OBSTACLE_THRESHOLD = 3  # Stop the car if obstacle is closer than 3 cm
-
-# Function to display the current status
-def display_status():
-    os.system('clear')  # Clear the console for a clean display
-    print(f"Current Speed: {motor_speed}%")
-    print(f"Servo Angle: {servo_angle}°")
-    print(f"Front Distance: {front_distance:.1f} cm")
-    print(f"Back Distance: {back_distance:.1f} cm")
-
-# Function to set the servo angle
-def set_servo_angle(angle):
-    global servo_angle
-    servo_angle = max(0, min(180, angle))  # Constrain angle between 0° and 180°
-    duty_cycle = (servo_angle / 18.0) + 2.5  # Convert angle to duty cycle
-    servo.ChangeDutyCycle(duty_cycle)
-
-# Function to set the motor speed
-def set_motor_speed(speed):
-    global motor_speed
-    motor_speed = max(0, min(100, speed))  # Constrain speed between 0% and 100%
-    motor_pwm.ChangeDutyCycle(motor_speed)
-
-# Function to measure distance using ultrasonic sensors
-def measure_distance(trigger, echo):
-    GPIO.output(trigger, True)
+# UltraSonic Sensor
+def distance_back():
+    # set Trigger to HIGH
+    GPIO.output(TRIGGER, True)
+    # set Trigger after 0.01ms to LOW
     time.sleep(0.00001)
-    GPIO.output(trigger, False)
-
-    start_time = time.time()
-    stop_time = time.time()
-
-    # Record the time of the signal's travel
-    while GPIO.input(echo) == 0:
-        start_time = time.time()
-
-    while GPIO.input(echo) == 1:
-        stop_time = time.time()
-
-    # Calculate the distance (speed of sound = 34300 cm/s)
-    time_elapsed = stop_time - start_time
-    distance = (time_elapsed * 34300) / 2
+    GPIO.output(TRIGGER, False)
+    StartTime = time.time()
+    StopTime = time.time()
+    # save StartTime
+    while GPIO.input(ECHO) == 0:
+        StartTime = time.time()
+    # save time of arrival
+    while GPIO.input(ECHO) == 1:
+        StopTime = time.time()
+    # time difference between start and arrival
+    TimeElapsed = StopTime - StartTime
+    # multiply with the sonic speed (34900 cm/s)
+    # and divide by 2, because there and back
+    distance = (TimeElapsed * 34900) / 2
     return distance
 
-# Function to check for obstacles
-def check_obstacles():
-    global front_distance, back_distance
-    front_distance = measure_distance(FRONT_TRIGGER, FRONT_ECHO)
-    back_distance = measure_distance(BACK_TRIGGER, BACK_ECHO)
+def distance_front():
+    # set Trigger to HIGH
+    GPIO.output(TRIGGER_2, True)
+    # set Trigger after 0.01ms to LOW
+    time.sleep(0.00001)
+    GPIO.output(TRIGGER_2, False)
+    StartTime = time.time()
+    StopTime = time.time()
+    # save StartTime
+    while GPIO.input(ECHO_2) == 0:
+        StartTime = time.time()
+    # save time of arrival
+    while GPIO.input(ECHO_2) == 1:
+        StopTime = time.time()
+    # time difference between start and arrival
+    TimeElapsed = StopTime - StartTime
+    # multiply with the sonic speed (34900 cm/s)
+    # and divide by 2, because there and back
+    distance = (TimeElapsed * 34900) / 2
+    return distance
 
-    # Stop the motor if an obstacle is detected within the threshold
-    if front_distance < OBSTACLE_THRESHOLD or back_distance < OBSTACLE_THRESHOLD:
-        print("Obstacle detected! Stopping the car...")
-        set_motor_speed(0)
+# Setup function for movement
+def front_and_back(movement, speed): # movement = GPIO.HIGH or GPIO.LOW (high for forward, low for backward)
+    if speed <= 100:
+        GPIO.output(DIG1, movement)
+        GPIO.output(DIG2, movement)
+        p1.start(speed)
+        p2.start(speed)
+    else:
+        print("Max Speed, cannot go faster")
 
-# Cleanup GPIO and PWM
-def cleanup():
-    servo.stop()
-    motor_pwm.stop()
-    GPIO.cleanup()
+def brake():
+    print("Brake")
+    GPIO.output(DIG1, GPIO.LOW)
+    GPIO.output(DIG2, GPIO.LOW)
+    p1.start(0)
+    p2.start(0)
 
-# Main loop
-def main():
-    print("System initializing...")
-    try:
-        while True:
-            # Continuously check for obstacles
-            check_obstacles()
-            display_status()
-            time.sleep(0.1)  # Short delay for stability
-    except KeyboardInterrupt:
-        print("\nExiting program...")
-    finally:
-        cleanup()
+def middle():
+    print("Middle")
+    servo.ChangeDutyCycle(6.5)
 
-# Entry point of the program
-if __name__ == "__main__":
-    main()
+def dragRace():
+    middle()
+    front_and_back(GPIO.HIGH, 100)
+    time.sleep(3)
+    brake()
+
+########### Receiving input from user ############
+# KEYBOARD
+def keyboard():
+
+    def turning(direction, pastDuty):
+        if direction == "left":
+            print("Turning left")
+            pastDuty -= 0.25
+        elif direction == "right":
+            print("Turning right")
+            pastDuty += 0.25
+        servo.ChangeDutyCycle(pastDuty)
+        return pastDuty
+    
+    from getkey import getkey, keys
+    duty = 6.5
+    speed = 0
+    pastKey = ""
+
+
+    while True:
+        key = getkey()
+        distFRONT = round(distance_front(),1)
+        distBACK = round(distance_back(),1)
+        print(f"Front Space: {distFRONT}")
+        print(f"Back Space: {distBACK}")
+        count = 0
+        print(distFRONT)
+        if distFRONT <= 7:
+            count = 1
+            if count == 1:
+                brake()
+                print("Distance Too Close\nAutomated Braking Activated")
+                time.sleep(2)
+            if key == "w":
+                count = 1
+            else:
+                count = 0
+        print(distBACK)
+        if distBACK <= 5:
+            count = 1
+            if count == 1:
+                brake()
+                print("Distance Too Close\nAutomated Braking Activated")
+                time.sleep(2)
+            if key == "s":
+                count = 1
+            else:
+                count = 0
+
+        # Braking
+        if key == " ":
+            brake()
+            speed = 0
+
+        # DRAG RACE MODE
+        if key == "p":
+            dragRace()
+        # Middle
+        if key == "m":
+            middle()
+            duty = 6.5
+        # Forward Backward
+        if key == "w":
+            if pastKey == "w" and speed < 100:
+                speed += 10
+                print("forward")
+            elif pastKey == "s":
+                speed = 0
+            else:
+                print("Max speed already") 
+            front_and_back(GPIO.HIGH, speed)
+        elif key == "s":
+            speed = 25
+            front_and_back(GPIO.LOW, speed)
+        # Left Right
+        if key == "a":
+            if duty >= 5.25:
+                duty = turning("left", duty)
+            else:
+                print("Cannot turn left anymore")
+            
+        elif key == "d":
+            if duty <= 7.75:
+                duty = turning("right", duty)
+            else:
+                print("Cannot turn right anymore")
+        print("-----Status-----")
+        print("Speed: " + str(speed) + " Duty: " + str(duty))
+        print("----------------")
+        # Storing past key data
+        pastKey = key
+        # Exit
+        if key == "q":
+            break
+
+# JOYSTICK
+
+def driverMotorConverter(value):
+    if value < 0:
+        return 0
+    else:
+        temp = (value/32767)*85.0 # Limit to 85% of max speed
+        return abs(round(temp, 1))
+
+def servoConverter(value):
+    temp = (value/32767) * 1.25
+    return round(temp, 2)
+
+def ds4controller():
+    from pyPS4Controller.controller import Controller
+    class MyController(Controller):
+        duty = 6.5
+        def __init__(self, **kwargs):
+            Controller.__init__(self, **kwargs)
+        
+        def on_L2_press(self, value):
+            print("Backward")
+            front_and_back(GPIO.LOW, driverMotorConverter(value))
+
+        def on_L2_release(self):
+            front_and_back(GPIO.LOW, 0)
+
+        def on_R2_press(self, value):
+            print("Forward")
+            front_and_back(GPIO.HIGH, driverMotorConverter(value))
+
+        def on_R2_release(self):
+            front_and_back(GPIO.HIGH, 0)
+
+        def on_L3_right(self, value):
+            print("Right")
+            turn = 6.5 + servoConverter(value)
+            servo.ChangeDutyCycle(turn)
+
+        def on_L3_x_at_rest(self):
+            middle()
+        
+        def on_L3_y_at_rest(self):
+            middle()
+        
+        def on_L3_left(self, value):
+            print("Left")
+            turn = 6.5 + servoConverter(value)
+            servo.ChangeDutyCycle(turn)
+
+        def on_square_press(self):
+            print("BRAKE")
+            brake()
+
+        def on_options_press(self):
+            servo.stop()
+            p1.stop()
+            p2.stop()
+            GPIO.cleanup()
+
+    controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
+    controller.listen(timeout=60)
+
+modeSelect = ""
+# Main loop for the program
+
+
+while modeSelect != "kb" and modeSelect != "ds4":
+    modeSelect = input("Keyboard or Joystick? (kb/ds4): ")
+    if modeSelect == "kb":
+        print("Keyboard Activated")
+        keyboard()
+    elif modeSelect == "ds4":
+        print("DS4 Activated")
+        ds4controller()
+    else:
+        print("Please select a mode")
+
+# Cleaning up
+servo.stop()
+p1.stop()
+p2.stop()
+GPIO.cleanup()
