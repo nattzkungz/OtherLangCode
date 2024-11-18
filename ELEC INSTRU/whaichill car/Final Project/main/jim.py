@@ -2,7 +2,6 @@
 import RPi.GPIO as GPIO
 import time
 import os
-import keyboard  # For non-blocking key detection
 
 # Setting GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
@@ -40,9 +39,9 @@ motor_pwm.start(0)  # Motor off
 # Variables to track current state
 servo_angle = 90  # Initial angle
 motor_speed = 0   # Initial speed (0%)
-front_distance = 100  # Initial front distance
-back_distance = 100   # Initial back distance
-OBSTACLE_THRESHOLD = 20  # Stop the car if obstacle is closer than 20 cm
+front_distance = 100  # Placeholder distance from the front sensor
+back_distance = 100   # Placeholder distance from the back sensor
+OBSTACLE_THRESHOLD = 3  # Stop the car if obstacle is closer than 3 cm
 
 # Function to display the current status
 def display_status():
@@ -56,7 +55,7 @@ def display_status():
 def set_servo_angle(angle):
     global servo_angle
     servo_angle = max(0, min(180, angle))  # Constrain angle between 0° and 180°
-    duty_cycle = (servo_angle / 18) + 2.5  # Convert angle to duty cycle
+    duty_cycle = (servo_angle / 18.0) + 2.5  # Convert angle to duty cycle
     servo.ChangeDutyCycle(duty_cycle)
 
 # Function to set the motor speed
@@ -103,43 +102,20 @@ def cleanup():
     motor_pwm.stop()
     GPIO.cleanup()
 
-# Main keyboard control function
-def keyboard_control():
-    print("Use the following keys to control:")
-    print("'w' - Increase Speed | 's' - Decrease Speed")
-    print("'a' - Turn Servo Left | 'd' - Turn Servo Right")
-    print("'q' - Quit the Program")
-    display_status()
-
+# Main loop
+def main():
+    print("System initializing...")
     try:
         while True:
             # Continuously check for obstacles
             check_obstacles()
             display_status()
-
-            # Non-blocking key detection
-            if keyboard.is_pressed('w'):  # Increase speed
-                set_motor_speed(motor_speed + 10)
-                time.sleep(0.1)  # Add a short delay to prevent oversensitivity
-            elif keyboard.is_pressed('s'):  # Decrease speed
-                set_motor_speed(motor_speed - 10)
-                time.sleep(0.1)
-            elif keyboard.is_pressed('a'):  # Turn servo left
-                set_servo_angle(servo_angle - 10)
-                time.sleep(0.1)
-            elif keyboard.is_pressed('d'):  # Turn servo right
-                set_servo_angle(servo_angle + 10)
-                time.sleep(0.1)
-            elif keyboard.is_pressed('q'):  # Quit the program
-                print("Exiting program...")
-                break
+            time.sleep(0.1)  # Short delay for stability
     except KeyboardInterrupt:
-        print("\nKeyboard interrupt detected. Exiting program...")
+        print("\nExiting program...")
     finally:
         cleanup()
 
 # Entry point of the program
 if __name__ == "__main__":
-    print("System initializing...")
-    display_status()
-    keyboard_control()
+    main()
