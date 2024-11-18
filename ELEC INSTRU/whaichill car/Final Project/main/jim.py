@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 import os
-from getkey import getkey, keys
+import keyboard  # For non-blocking key detection
 
 # Setting GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
@@ -117,18 +117,20 @@ def keyboard_control():
             check_obstacles()
             display_status()
 
-            # Get key input without Enter
-            key = getkey()
-
-            if key == 'w':  # Increase speed
+            # Non-blocking key detection
+            if keyboard.is_pressed('w'):  # Increase speed
                 set_motor_speed(motor_speed + 10)
-            elif key == 's':  # Decrease speed
+                time.sleep(0.1)  # Add a short delay to prevent oversensitivity
+            elif keyboard.is_pressed('s'):  # Decrease speed
                 set_motor_speed(motor_speed - 10)
-            elif key == 'a':  # Turn servo left
+                time.sleep(0.1)
+            elif keyboard.is_pressed('a'):  # Turn servo left
                 set_servo_angle(servo_angle - 10)
-            elif key == 'd':  # Turn servo right
+                time.sleep(0.1)
+            elif keyboard.is_pressed('d'):  # Turn servo right
                 set_servo_angle(servo_angle + 10)
-            elif key == 'q':  # Quit the program
+                time.sleep(0.1)
+            elif keyboard.is_pressed('q'):  # Quit the program
                 print("Exiting program...")
                 break
     except KeyboardInterrupt:
